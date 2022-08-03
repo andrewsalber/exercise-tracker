@@ -63,11 +63,11 @@ app.post('/api/users/:_id/exercises', (req,res) => {
           res.send("There was an error saving the exercise")
         } else {
           res.json({
+            _id: data.userID,
             username: userData.username,
-            description,
-            duration,
             date: data.date.toDateString(),
-            _id: data.userID
+            duration,
+            description
           });
         };
       });
