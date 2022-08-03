@@ -55,7 +55,7 @@ app.post('/api/users/:_id/exercises', (req,res) => {
       const newExercise = new Exercise( {
         userID: id,
         description,
-        duration: parseInt(duration);
+        duration,
         date: new Date(date)
       })
       newExercise.save((err,data) => {
