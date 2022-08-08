@@ -53,9 +53,9 @@ app.post('/api/users/:_id/exercises', (req,res) => {
       res.send("Could not find user")
     } else {
       if (date) {
-        parsedDate = new Date(date).toUTCString();
+        parsedDate = new Date(date)
       } else {
-        parsedDate = new Date().toUTCString();
+        parsedDate = new Date()
       }
       const newExercise = new Exercise( {
         userID: id,
@@ -70,7 +70,7 @@ app.post('/api/users/:_id/exercises', (req,res) => {
           res.send({
             _id: data.userID,
             username: userData.username,
-            date: data.date.toUTCString(),
+            date: data.date.toDateString(),
             duration: parseInt(duration),
             description
           });
@@ -102,9 +102,10 @@ app.get('/api/users/:_id/logs', (req,res) => {
           return {
             "description": obj.description,
             "duration": obj.duration,
-            "date": obj.date.toUTCString()
+            "date": obj.date.toDateString()
           }
         })
+        console.log(parsedData)
         res.send(
           {
             "username": userName,
