@@ -102,9 +102,9 @@ app.get('/api/users/:_id/logs', (req,res) => {
         })
         res.send(
           {
-            "_id": id,
             "username": userName,
             "count": data.length,
+            "_id": id,
             "log": parsedData
           }
         );
