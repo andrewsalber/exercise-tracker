@@ -53,9 +53,9 @@ app.post('/api/users/:_id/exercises', (req,res) => {
       res.send("Could not find user")
     } else {
       if (date) {
-        parsedDate = new Date(date)
+        parsedDate = new Date(date).toUTCString();
       } else {
-        parsedDate = new Date()
+        parsedDate = new Date().toUTCString();
       }
       const newExercise = new Exercise( {
         userID: id,
