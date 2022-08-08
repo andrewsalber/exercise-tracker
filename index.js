@@ -97,7 +97,7 @@ app.get('/api/users/:_id/logs', (req,res) => {
           return {
             "description": obj.description,
             "duration": obj.duration,
-            "date": obj.date
+            "date": obj.date.toDateString()
           }
         })
         res.send(
