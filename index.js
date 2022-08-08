@@ -52,11 +52,16 @@ app.post('/api/users/:_id/exercises', (req,res) => {
     if (err || !userData) {
       res.send("Could not find user")
     } else {
+      if (date) {
+        parsedDate = new Date(date);
+      } else {
+        parsedDate = new Date();
+      }
       const newExercise = new Exercise( {
         userID: id,
         description,
         duration,
-        date: new Date(date)
+        date: parsedDate
       })
       newExercise.save((err,data) => {
         if (err || !data) {
@@ -94,6 +99,7 @@ app.get('/api/users/:_id/logs', (req,res) => {
         res.send("could not retreive user exercises")
       } else {
         let parsedData = data.map((obj) => {
+          console.log(obj.description);
           return {
             "description": obj.description,
             "duration": obj.duration,
