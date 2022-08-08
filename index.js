@@ -85,6 +85,35 @@ app.get('/api/users', (req,res) => {
   });
 });
 
+app.get('/api/users/:_id/logs', (req,res) => {
+  const id = req.params._id;
+  User.findById(id,(err, data) => {
+    let userName = data.username;
+    Exercise.find({userID: id}, (err, data) => {
+      if (err || !data) {
+        res.send("could not retreive user exercises")
+      } else {
+        let parsedData = data.map((obj) => {
+          return {
+            "description": obj.description,
+            "duration": obj.duration,
+            "date": obj.date
+          }
+        })
+        res.send(
+          {
+            "_id": id,
+            "username:": userName,
+            "count": data.length,
+            "log": parsedData
+          }
+        );
+      };
+    });
+  });
+});
+  
+
 //62e7223e0206e738d459cf6a
 
 const listener = app.listen(process.env.PORT || 3000, () => {
