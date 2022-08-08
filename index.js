@@ -57,6 +57,7 @@ app.post('/api/users/:_id/exercises', (req,res) => {
       } else {
         parsedDate = new Date().toUTCString();
       }
+      console.log("date:", date, "parsedDate:", parsedDate)
       const newExercise = new Exercise( {
         userID: id,
         description,
@@ -70,7 +71,7 @@ app.post('/api/users/:_id/exercises', (req,res) => {
           res.send({
             _id: data.userID,
             username: userData.username,
-            date: data.date.toDateString(),
+            date: data.date.toUTCString(),
             duration: parseInt(duration),
             description
           });
@@ -102,7 +103,7 @@ app.get('/api/users/:_id/logs', (req,res) => {
           return {
             "description": obj.description,
             "duration": obj.duration,
-            "date": obj.date.toDateString()
+            "date": obj.date.toUTCString()
           }
         })
         console.log(parsedData)
