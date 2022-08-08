@@ -22,6 +22,14 @@ const UserSchema = new mongoose.Schema({
 const User = mongoose.model("User", UserSchema)
 const Exercise = mongoose.model("Exercise", ExerciseSchema);
 
+if (!Date.prototype.toUTC){
+  Date.prototype.toUTC = function(){
+      var utcOffset = new Date().getTimezoneOffset();
+      var utcNow    = new Date().addMinutes(utcOffset);
+      return utcNow;
+  };
+}
+
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 app.use(cors())
@@ -45,7 +53,6 @@ app.post('/api/users', (req, res) => {
 });
 
 app.post('/api/users/:_id/exercises', (req,res) => {
-  console.log(req.body);
   const id = req.params._id;
   const {description, duration, date} = req.body
   User.findById(id, (err, userData) => {
@@ -53,9 +60,9 @@ app.post('/api/users/:_id/exercises', (req,res) => {
       res.send("Could not find user")
     } else {
       if (date) {
-        parsedDate = new Date(date);
+        parsedDate = new Date(date).toUTC();
       } else {
-        parsedDate = new Date();
+        parsedDate = new Date().toUTC();
       }
       const newExercise = new Exercise( {
         userID: id,
@@ -99,7 +106,6 @@ app.get('/api/users/:_id/logs', (req,res) => {
         res.send("could not retreive user exercises")
       } else {
         let parsedData = data.map((obj) => {
-          console.log(obj.description);
           return {
             "description": obj.description,
             "duration": obj.duration,
