@@ -108,7 +108,12 @@ app.get('/api/users/:_id/logs', (req,res) => {
             "date": obj.date.toDateString()
           }
         })
-        console.log(parsedData)
+        console.log({
+          "username": userName,
+          "count": data.length,
+          "_id": id,
+          "log": parsedData
+        })
         res.send(
           {
             "username": userName,
