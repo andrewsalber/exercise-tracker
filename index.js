@@ -92,41 +92,41 @@ app.get('/api/users', (req,res) => {
 });
 
 app.get('/api/users/:_id/logs', (req,res) => {
-  //onsole.log(req.params);
   const id = req.params._id;
+  let from = req.query.from;
+  let to = req.query.to;
+  let limit = req.query.limit;
+
   User.findById(id,(err, data) => {
-    let userName = data.username;
-    Exercise.find({userID: id}, (err, data) => {
-      console.log(data);
-      if (err || !data) {
-        res.send("could not retreive user exercises")
-      } else {
-        let parsedData = data.map((obj) => {
-          return {
-            "description": obj.description,
-            "duration": obj.duration,
-            "date": obj.date.toDateString()
-          }
-        })
-        console.log({
-          "username": userName,
-          "count": data.length,
-          "_id": id,
-          "log": parsedData
-        })
-        res.send(
-          {
-            "username": userName,
-            "count": data.length,
-            "_id": id,
-            "log": parsedData
-          }
-        );
-      };
-    });
+    if (err || data) {
+      res.send("could not retreive user logs")
+    } else {
+      let userName = data.username;
+      Exercise.find({userID: id}, (err, data) => {
+        //console.log(data);
+        if (err || !data) {
+          res.send("could not retreive user exercises")
+        } else {
+          let parsedData = data.map((obj) => {
+            return {
+              "description": obj.description,
+              "duration": obj.duration,
+              "date": obj.date.toDateString()
+            }
+          });
+          res.send(
+            {
+              "username": userName,
+              "count": data.length,
+              "_id": id,
+              "log": parsedData
+            }
+          );
+        };
+      });
+    };
   });
 });
-  
 
 //62e7223e0206e738d459cf6a
 
