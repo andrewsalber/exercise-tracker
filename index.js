@@ -92,10 +92,12 @@ app.get('/api/users', (req,res) => {
 });
 
 app.get('/api/users/:_id/logs', (req,res) => {
+  //onsole.log(req.params);
   const id = req.params._id;
   User.findById(id,(err, data) => {
     let userName = data.username;
     Exercise.find({userID: id}, (err, data) => {
+      console.log(data);
       if (err || !data) {
         res.send("could not retreive user exercises")
       } else {
