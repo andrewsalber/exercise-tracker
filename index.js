@@ -97,9 +97,12 @@ app.get('/api/users', (req,res) => {
 
 app.get('/api/users/:_id/logs', (req,res) => {
   const id = req.params._id;
-  //let from = req.query.from;
-  //let to = req.query.to;
-  //let limit = req.query.limit;
+
+  let from = undefined;
+  if (req.query.from) from = new Date(req.query.from);
+  let to = undefined;
+  if (req.query.to) to = new Date(req.query.to);
+  let limit = req.query.limit;
 
   User.findById(id,(err, data) => {
     if (err || !data) {
@@ -111,19 +114,52 @@ app.get('/api/users/:_id/logs', (req,res) => {
         if (err || !data) {
           res.send("could not retreive user exercises")
         } else {
-          let parsedData = data.map((obj) => {
+          let parsedData = data.filter((obj) => {
+            if (from) {
+              if (obj.date.getTime() > from.getTime()) {
+                return true;
+              } else {
+                return false;
+              }
+            }
+            return true;
+          }).filter((obj) => {
+            if (to) {
+              if (obj.date.getTime() < to.getTime()) {
+                return true;
+              } else {
+                return false;
+              }
+            }
+            return true;
+          });
+
+          if (limit) {
+            parsedData = parsedData.splice(0,limit);
+          } else {
+            //do nothing
+          }
+
+          parsedData = parsedData.map((obj) => {
             return {
               "description": obj.description,
               "duration": obj.duration,
               "date": obj.date.toDateString()
             }
           });
-          console.log("was here");
+
+          let fromBool = false;
+          if (from) fromBool = true;
+          let toBool = false;
+          if (to) toBool = true;
+        
           res.send(
             {
-              "username": userName,
-              "count": data.length,
               "_id": id,
+              "username": userName,
+              ...(fromBool && {"from": from.toDateString()}),
+              ...(toBool && {"to": to.toDateString()}),
+              "count": parsedData.length,
               "log": parsedData
             }
           );
