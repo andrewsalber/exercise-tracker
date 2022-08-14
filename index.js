@@ -86,6 +86,10 @@ app.get('/api/users', (req,res) => {
     if (err || !data) {
       res.send("no users found")
     } else {
+      let parsedData = {
+        username: data.username,
+        _id: data._id
+      }
       res.json(data);
     }
   });
@@ -93,12 +97,12 @@ app.get('/api/users', (req,res) => {
 
 app.get('/api/users/:_id/logs', (req,res) => {
   const id = req.params._id;
-  let from = req.query.from;
-  let to = req.query.to;
-  let limit = req.query.limit;
+  //let from = req.query.from;
+  //let to = req.query.to;
+  //let limit = req.query.limit;
 
   User.findById(id,(err, data) => {
-    if (err || data) {
+    if (err || !data) {
       res.send("could not retreive user logs")
     } else {
       let userName = data.username;
@@ -114,6 +118,7 @@ app.get('/api/users/:_id/logs', (req,res) => {
               "date": obj.date.toDateString()
             }
           });
+          console.log("was here");
           res.send(
             {
               "username": userName,
